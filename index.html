@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ITRUN & CISCO Academy | Linux для Телекоммуникаций</title>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+    <style>
+        :root {
+            --bg-color: #0b0f19;
+            --card-bg: #131a26;
+            --primary: #e75800;
+            --primary-hover: #e75800;
+            --accent: #1c0878;
+            --text: #f3f4f6;
+            --text-muted: #9ca3af;
+            --border: #222f43;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+            background-image: 
+                linear-gradient(rgba(34, 47, 67, 0.15) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(34, 47, 67, 0.15) 1px, transparent 1px);
+            background-size: 30px 30px;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        header {
+            padding: 30px 0;
+            border-bottom: 1px solid var(--border);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(11, 15, 25, 0.8);
+        }
+
+        .header-flex {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-weight: 800;
+            font-size: 24px;
+            letter-spacing: 1px;
+            color: var(--text);
+        }
+
+        .logo span {
+            color: var(--primary);
+        }
+
+        .partner-badge {
+            background: rgba(0, 240, 255, 0.1);
+            border: 1px solid var(--primary);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 100px 0 80px 0;
+            text-align: center;
+            position: relative;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            background: var(--primary);
+            filter: blur(150px);
+            opacity: 0.15;
+            top: 10%;
+            left: 50%;
+            transform: translateX(-50%);
+            pointer-events: none;
+        }
+
+        h1 {
+            font-size: 48px;
+            font-weight: 800;
+            line-height: 1.2;
+            margin-bottom: 20px;
+            letter-spacing: -1px;
+        }
+
+        h1 span {
+            color: transparent;
+            -webkit-text-stroke: 1px var(--primary);
+            text-shadow: 0 0 20px rgba(0, 240, 255, 0.2);
+        }
+
+        .subtitle {
+            font-size: 20px;
+            color: var(--text-muted);
+            max-width: 700px;
+            margin: 0 auto 40px auto;
+        }
+
+        .cta-btn {
+            display: inline-block;
+            background: var(--primary);
+            color: var(--bg-color);
+            padding: 16px 36px;
+            border-radius: 8px;
+            font-weight: 700;
+            text-decoration: none;
+            font-size: 18px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 20px rgba(0, 240, 255, 0.3);
+            border: none;
+            cursor: pointer;
+        }
+
+        .cta-btn:hover {
+            background: var(--primary-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(0, 240, 255, 0.4);
+        }
+
+        /* Stats Section */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 10fr);
+            gap: 20px;
+            margin: 40px 0;
+        }
+
+        @media (max-width: 768px) {
+            .stats-grid { grid-template-columns: 1fr; }
+            h1 { font-size: 32px; }
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            padding: 30px;
+            border-radius: 12px;
+            text-align: center;
+            position: relative;
+            transition: border 0.3s;
+        }
+
+        .stat-card.active {
+            border-color: var(--accent);
+            box-shadow: 0 0 15px rgba(255, 0, 127, 0.1);
+        }
+
+        .stat-card.success {
+            border-color: var(--primary);
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.1);
+        }
+
+        .stat-val {
+            font-size: 38px;
+            font-weight: 800;
+            margin-bottom: 10px;
+        }
+
+        .stat-card.active .stat-val { color: var(--accent); }
+        .stat-card.success .stat-val { color: var(--primary); }
+
+        .stat-label {
+            font-size: 14px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Program Section Tabs */
+        .section-title {
+            font-size: 32px;
+            font-weight: 800;
+            margin: 80px 0 30px 0;
+            text-align: center;
+        }
+
+        .tabs-container {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 30px;
+        }
+
+        .tabs-nav {
+            display: flex;
+            gap: 10px;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 15px;
+            margin-bottom: 25px;
+            overflow-x: auto;
+        }
+
+        .tab-btn {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            white-space: nowrap;
+            transition: all 0.2s;
+        }
+
+        .tab-btn.active {
+            background: var(--primary);
+            color: var(--bg-color);
+            border-color: var(--primary);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .content-flex {
+            display: flex;
+            justify-content: space-between;
+            gap: 40px;
+        }
+
+        @media (max-width: 768px) {
+            .content-flex { flex-direction: column; }
+        }
+
+        .content-main { flex: 2; }
+        .content-side {
+            flex: 1;
+            background: rgba(255,255,255,0.02);
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 3px solid var(--primary);
+            height: fit-content;
+        }
+
+        .content-side h4 {
+            margin-bottom: 10px;
+            color: var(--primary);
+        }
+
+        .bullet-list {
+            list-style: none;
+        }
+
+        .bullet-list li {
+            position: relative;
+            padding-left: 25px;
+            margin-bottom: 12px;
+        }
+
+        .bullet-list li::before {
+            content: '⚡';
+            position: absolute;
+            left: 0;
+            color: var(--primary);
+        }
+
+        /* Calculator Section */
+        .calc-box {
+            background: linear-gradient(135deg, #131a26 0%, #0f1622 100%);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 40px;
+            margin: 40px 0;
+        }
+
+        .calc-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+        }
+
+        @media (max-width: 768px) {
+            .calc-grid { grid-template-columns: 1fr; }
+        }
+
+        .slider-group {
+            margin-bottom: 30px;
+        }
+
+        .slider-label-flex {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .slider-label-flex span:last-child {
+            color: var(--primary);
+            font-size: 20px;
+        }
+
+        .range-slider {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 6px;
+            border-radius: 3px;
+            background: var(--border);
+            outline: none;
+        }
+
+        .range-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--primary);
+            cursor: pointer;
+            box-shadow: 0 0 10px var(--primary);
+            transition: transform 0.1s;
+        }
+
+        .range-slider::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+        }
+
+        .result-panel {
+            background: rgba(0,0,0,0.2);
+            border: 1px dashed var(--border);
+            border-radius: 8px;
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .result-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            font-size: 16px;
+            color: var(--text-muted);
+        }
+
+        .result-row.total {
+            border-top: 1px solid var(--border);
+            padding-top: 15px;
+            margin-bottom: 0;
+            color: var(--text);
+            font-weight: 700;
+        }
+
+        .result-row.total .price-val {
+            font-size: 32px;
+            color: var(--primary);
+            text-shadow: 0 0 15px rgba(0, 240, 255, 0.3);
+        }
+
+        .discount-badge {
+            background: var(--accent);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+            display: none;
+        }
+
+        /* Register Form */
+        .register-section {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 40px;
+            margin-bottom: 80px;
+            text-align: center;
+        }
+
+        .form-max {
+            max-width: 500px;
+            margin: 30px auto 0 auto;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        .form-control {
+            width: 100%;
+            background: var(--bg-color);
+            border: 1px solid var(--border);
+            padding: 14px;
+            border-radius: 6px;
+            color: var(--text);
+            font-size: 16px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary);
+        }
+
+        .success-overlay {
+            display: none;
+            animation: fadeIn 0.5s ease forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        footer {
+            text-align: center;
+            padding: 40px 0;
+            color: var(--text-muted);
+            font-size: 14px;
+            border-top: 1px solid var(--border);
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="container header-flex">
+            <div class="logo">ITRUN<span>.tj</span></div>
+            <div class="partner-badge">CISCO Academy Partner (ICT)</div>
+        </div>
+    </header>
+
+    <div class="container">
+        <section class="hero">
+            <h1>Linux Administration<br><span>для Телекоммуникаций</span></h1>
+            <p class="subtitle">Индивидуальный высоконагруженный курс для инженеров связи. Снижение времени простоя (Downtime) и оптимизация сетевых сервисов ядра.</p>
+            <a href="#calc" class="cta-btn">Рассчитать стоимость обучения</a>
+        </section>
+
+        <section class="stats-grid">
+            <div class="stat-card active">
+                <div class="stat-val">85 мин</div>
+                <div class="stat-label">MTTR Без подготовки</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-val">50 мин</div>
+                <div class="stat-label">Обычные курсы Linux</div>
+            </div>
+            <div class="stat-card success">
+                <div class="stat-val">18 мин</div>
+                <div class="stat-label">После ITRUN & CISCO</div>
+            </div>
+        </section>
+
+        <h2 class="section-title">Программа курса (83 ак. часа)</h2>
+        <section class="tabs-container">
+            <div class="tabs-nav">
+                <button class="tab-btn active" onclick="switchTab(event, 'mod1')">Модуль 1: Базовый CLI</button>
+                <button class="tab-btn" onclick="switchTab(event, 'mod2')">Модуль 2: Сети & Инфраструктура</button>
+                <button class="tab-btn" onclick="switchTab(event, 'mod3')">Модуль 3: Сервисы & Web</button>
+                <button class="tab-btn" onclick="switchTab(event, 'mod4')">Модуль 4: Ядро & Пакеты</button>
+            </div>
+
+            <div id="mod1" class="tab-content active">
+                <div class="content-flex">
+                    <div class="content-main">
+                        <h3>Основы Linux CLI и Автоматизация</h3>
+                        <p style="color: var(--text-muted); margin: 15px 0;">Фундаментальная подготовка инженеров к уверенной работе в терминале без графического интерфейса.</p>
+                        <ul class="bullet-list">
+                            <li>Глубокое изучение командной строки Bash и переменных окружения</li>
+                            <li>Поиск текстовых аномалий в логах с помощью регулярных выражений (RegEx)</li>
+                            <li>Архитектура и иерархия файловой системы Linux под нагрузкой</li>
+                        </ul>
+                    </div>
+                    <div class="content-side">
+                        <h4>Часы модуля</h4>
+                        <p>🗣 Теория: 13.5 ак.ч</p>
+                        <p>💻 Практика: 15 ак.ч</p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="mod2" class="tab-content">
+                <div class="content-flex">
+                    <div class="content-main">
+                        <h3>Сетевая Инфраструктура, DNS и DHCP</h3>
+                        <p style="color: var(--text-muted); margin: 15px 0;">Критически важный блок для операторов сотовой связи (Tcell, Megafon, Babilon-M).</p>
+                        <ul class="bullet-list">
+                            <li>Экспертная диагностика утилитами ip, traceroute, dig, netstat, host</li>
+                            <li>Развертывание служб DHCP для автоназначения тысяч IP-адресов в сети</li>
+                            <li>Конфигурация Bind9: настройка зон, делегирование, форвардинг</li>
+                            <li>Синхронизация времени по протоколу NTP</li>
+                        </ul>
+                    </div>
+                    <div class="content-side">
+                        <h4>Часы модуля</h4>
+                        <p>🗣 Теория: 8 ак.ч</p>
+                        <p>💻 Практика: 14 ак.ч</p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="mod3" class="tab-content">
+                <div class="content-flex">
+                    <div class="content-main">
+                        <h3>Сетевые Службы, Web-стек и Проксирование</h3>
+                        <p style="color: var(--text-muted); margin: 15px 0;">Организация безопасной доставки внутренних и внешних сервисов телекома.</p>
+                        <ul class="bullet-list">
+                            <li>Развертывание и оптимизация веб-серверов Apache2, интеграция PHP/MySQL</li>
+                            <li>Настройка защищенного протокола SFTP для обмена конфигурациями и логами</li>
+                            <li>Внедрение прямых и обратных прокси-серверов (Proxy Server) для балансировки трафика</li>
+                        </ul>
+                    </div>
+                    <div class="content-side">
+                        <h4>Часы модуля</h4>
+                        <p>🗣 Теория: 8 ак.ч</p>
+                        <p>💻 Практика: 16 ак.ч</p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="mod4" class="tab-content">
+                <div class="content-flex">
+                    <div class="content-main">
+                        <h3>Управление Системой и Восстановление</h3>
+                        <p style="color: var(--text-muted); margin: 15px 0;">Как оживить сервер, если произошел аварийный сбой по питанию или повреждение ФС.</p>
+                        <ul class="bullet-list">
+                            <li>Конфигурация загрузчика GRUB и управление уровнями запуска SystemD</li>
+                            <li>Разметка накопителей высокой емкости с таблицами GPT</li>
+                            <li>Управление программными пакетами и репозиториями RPM/Debian</li>
+                        </ul>
+                    </div>
+                    <div class="content-side">
+                        <h4>Часы модуля</h4>
+                        <p>🗣 Теория: 5.5 ак.ч</p>
+                        <p>💻 Практика: 3 ак.ч</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <h2 id="calc" class="section-title">Интерактивный расчет стоимости</h2>
+        <section class="calc-box">
+            <div class="calc-grid">
+                <div>
+                    <div class="slider-group">
+                        <div class="slider-label-flex">
+                            <span>Количество слушателей:</span>
+                            <span id="student-count">5</span>
+                        </div>
+                        <input type="range" id="students-range" class="range-slider" min="1" max="30" value="5" oninput="calculatePrice()">
+                    </div>
+                    <p style="color: var(--text-muted); font-size: 14px;">* При обучении групп от 10 человек автоматически применяется корпоративная скидка 10% на общую смету.</p>
+                </div>
+                <div class="result-panel">
+                    <div class="result-row">
+                        <span>Тариф за 1 участника:</span>
+                        <span>5000 сомони</span>
+                    </div>
+                    <div class="result-row">
+                        <span>Скидка:</span>
+                        <span id="discount-val">0% <span class="discount-badge" id="d-badge">-10%</span></span>
+                    </div>
+                    <div class="result-row total">
+                        <span>Итоговая стоимость:</span>
+                        <span class="price-val"><span id="total-price">12 750</span> TJS</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <h2 class="section-title">Заявка на аудит компетенций команды</h2>
+        <section class="register-section" id="register">
+            <div id="form-wrapper">
+                <p class="subtitle">Оставьте контакты. Мы свяжемся с вами для адаптации лабораторных стендов под архитектуру вашей компании.</p>
+                <form class="form-max" onsubmit="handleForm(event)">
+                    <div class="form-group">
+                        <label>Ваше имя / Компания</label>
+                        <input type="text" class="form-control" placeholder="Например: Иван, Мегафон Таджикистан" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Контактный телефон</label>
+                        <input type="tel" class="form-control" placeholder="+992" required>
+                    </div>
+                    <button type="submit" class="cta-btn" style="width: 100%; margin-top: 10px;">Отправить запрос на обучение</button>
+                </form>
+            </div>
+            <div id="success-message" class="success-overlay">
+                <div style="font-size: 64px; margin-bottom: 20px;">🚀</div>
+                <h3 style="font-size: 28px; color: var(--primary); margin-bottom: 10px;">Заявка успешно отправлена!</h3>
+                <p style="color: var(--text-muted);">Наш корпоративный менеджер свяжется с вами в течение часа.</p>
+            </div>
+        </section>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>© 2026 Школа программирования IT RUN. Все права защищены.</p>
+            <p style="font-size: 12px; margin-top: 5px; color: #4b5563;">г. Душанбе, ул. Ф. Ниязи, Академия ITRUN | Тел: +992 559006060</p>
+        </div>
+    </footer>
+
+    <script>
+        function switchTab(evt, tabId) {
+            const contents = document.getElementsByClassName('tab-content');
+            for (let i = 0; i < contents.length; i++) {
+                contents[i].classList.remove('active');
+            }
+            const buttons = document.getElementsByClassName('tab-btn');
+            for (let i = 0; i < buttons.length; i++) {
+                buttons[i].classList.remove('active');
+            }
+            document.getElementById(tabId).classList.add('active');
+            evt.currentTarget.classList.add('active');
+        }
+
+        function calculatePrice() {
+            const count = parseInt(document.getElementById('students-range').value);
+            document.getElementById('student-count').innerText = count;
+            
+            const basePricePerStudent = 5000;
+            let total = count * basePricePerStudent;
+            
+            const discountBadge = document.getElementById('d-badge');
+            const discountVal = document.getElementById('discount-val');
+            
+            if (count >= 10) {
+                total = total * 0.85; // 10% скидка
+                discountBadge.style.display = 'inline-block';
+                discountVal.childNodes[0].nodeValue = "10% ";
+            } else {
+                discountBadge.style.display = 'none';
+                discountVal.childNodes[0].nodeValue = "0% ";
+            }
+            
+            document.getElementById('total-price').innerText = Math.round(total).toLocaleString('ru-RU');
+        }
+
+        function handleForm(e) {
+            e.preventDefault();
+            document.getElementById('form-wrapper').style.display = 'none';
+            document.getElementById('success-message').style.display = 'block';
+            
+            // Запуск салюта (конфетти) при отправке
+            confetti({
+                particleCount: 150,
+                spread: 80,
+                origin: { y: 0.6 },
+                colors: ['#00f0ff', '#ff007f', '#ffffff']
+            });
+        }
+        
+        // Первый расчет при загрузке
+        calculatePrice();
+    </script>
+</body>
+</html>
